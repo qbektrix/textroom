@@ -46,7 +46,6 @@
 #include "miniflo.h"
 #include "getaword.h"
 #include "musicroom.h"
-#include "googledocs.h"
 
 TextRoom::TextRoom(QWidget *parent, Qt::WFlags f)
 		: QWidget(parent, f), sentenceTally(0)
@@ -81,7 +80,6 @@ TextRoom::TextRoom(QWidget *parent, Qt::WFlags f)
 	miniFlo = new MiniFlo(this);
 	getAWord = new GetAWord(this);
 	musicRoom = new MusicRoom(this);
-	googleDocsDialog = new GoogleDocsDialog(this);	
 
 // Read settings saved by Options Dialog.
 #ifdef Q_OS_WIN32
@@ -169,7 +167,6 @@ TextRoom::TextRoom(QWidget *parent, Qt::WFlags f)
         new QShortcut ( QKeySequence(tr("F7", "Show MiniFlo")) , this, SLOT( showMiniFlo() ) );
         new QShortcut ( QKeySequence(tr("F8", "Get A Word")) , this, SLOT( showGetAWord() ) );
         new QShortcut ( QKeySequence(tr("F9", "MusicRoom")) , this, SLOT( showMusicRoom() ) );
-        new QShortcut ( QKeySequence(tr("F10", "Google Docs")) , this, SLOT( exportToGoogle() ) );
 	// Service: show cursor
 	new QShortcut ( QKeySequence(tr("Shift+F4", "Show Cursor")) , this, SLOT( sCursor() ) );
 
@@ -234,12 +231,13 @@ void TextRoom::playSound(Mix_Chunk *sound)
 void TextRoom::toggleEscape()
 {
 // Toggle Fullscreen or if visible hide Help when ESC is pressed.
-	if ( helpDialog->isVisible() || aboutDialog->isVisible() || scratchDialog->isVisible() || getAWord->isVisible() || musicRoom->isVisible() )
+	if ( helpDialog->isVisible() || aboutDialog->isVisible() || scratchDialog->isVisible() || getAWord->isVisible() || miniFlo->isVisible() )
 	{
 		helpDialog->hide();
 		aboutDialog->hide();
 		scratchDialog->hide();
 		getAWord->hide();
+		miniFlo->hide();
 	}
 	else if ( isFullScreen() )
 		toggleFullScreen();
@@ -871,24 +869,6 @@ void TextRoom::help()
 	}
 }
 
-void TextRoom::exportToGoogle()
-{
-	if (!googleDocsDialog->isVisible())
-	{
-		QTextDocumentWriter writer(QDir::homePath()+"/tmp.googledocs.odt", "odf");
-        	writer.write(textEdit->document());
-		if(googleDocsDialog->exec() == QDialog::Accepted)
-		{
-		QDir home = QDir::homePath();
-		home.remove("tmp.googledocs.odt");
-		}
-	}
-	else
-	{
-		googleDocsDialog->hide();
-	}
-}
-
 void TextRoom::loadStyleSheet(const QString &fcolor, const QString &bcolor, const QString &scolor)
 {
 
@@ -1249,10 +1229,14 @@ void TextRoom::insertImage()
 
 void TextRoom::showMiniFlo()
 {
-	writeSettings();
-	if (miniFlo->exec() == QDialog::Accepted)
+	if (!miniFlo->isVisible())
 	{
-		readSettings();
+		miniFlo->setWindowFlags(Qt::FramelessWindowHint);
+		miniFlo->showNormal();
+	}
+	else
+	{
+		miniFlo->hide();
 	}
 }
 

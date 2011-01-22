@@ -1,3 +1,0 @@
-TODO:
-1) More agressive path caching.
-2) Add more types?  Should we take a QVariant vs a QString?

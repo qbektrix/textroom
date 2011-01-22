@@ -68,6 +68,10 @@ void MusicRoom::on_actionLoad_activated()
 
 void MusicRoom::on_actionPlay_activated()
 {
+	if(songPath.endsWith("pls") || songPath.endsWith("m3u"))
+	Mix_SetMusicCMD("mplayer -playlist");
+	else
+	Mix_SetMusicCMD("mplayer");
 	music=Mix_LoadMUS(songPath.toUtf8());
 	if(!music) {
 	    printf("Mix_LoadMUS("+songPath.toUtf8()+"): %s\n", Mix_GetError());

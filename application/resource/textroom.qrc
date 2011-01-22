@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="/" >
-    <file>images/splash.jpg</file>
-    <file>images/textroom-about.png</file>
-    <file>images/help.png</file>
-  </qresource>
-</RCC>
