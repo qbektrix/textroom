@@ -21,6 +21,7 @@
 #include "ui_asciiexport.h"
 #include "mindmap.h"
 #include "asciireporter.h"
+#include "textroom.h"
 
 #include <QFile>
 #include <QFileDialog>
@@ -119,4 +120,3 @@ void ASCIIExportDialog::updateReport( )
 	m_filePath = m_ui->filePath->text();
 	m_ui->preview->setPlainText( m_reporter->generateReport( m_mindMap ) );
 }
-
